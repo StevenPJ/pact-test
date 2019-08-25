@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+     options {
+        // Keep 4 builds maximum
+        buildDiscarder(logRotator(numToKeepStr: '4'))
+      }
+
     stages {
         stage('Build Project') {
               steps {
@@ -14,4 +19,10 @@ pipeline {
             }
         }
     }
+
+     post {
+        always {
+          deleteDir()
+        }
+      }
 }
