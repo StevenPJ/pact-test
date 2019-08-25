@@ -21,7 +21,7 @@ pipeline {
 
         stage ('Verify Pacts') {
           steps {
-            sh """cd producer && ./mvnw clean verify -Dpact.provider.version=${GIT_COMMIT} -Dpact.verifier.publishResults=true"""
+            sh """cd ../producer && ./mvnw clean verify -Dpact.provider.version=${GIT_COMMIT} -Dpact.verifier.publishResults=true"""
           }
         }
     }
