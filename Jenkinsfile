@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Build Project') {
               steps {
-                sh """cd consumer && ./mvnw clean install"""
+                sh """cd consumer && ./mvnw clean -e install"""
                 }
         }
 
