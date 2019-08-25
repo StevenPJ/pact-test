@@ -15,13 +15,13 @@ pipeline {
 
         stage('Publish Pacts') {
           steps {
-            sh """cd consumer &&  ./mvnw pact:publish -Dpact.consumer.version=${GIT_COMMIT} -Dpact.tag=${BRANCH_NAME} -Dpact.broker.url=http://broker_app:80"""
+            sh """cd consumer && ./mvnw pact:publish -Dpact.consumer.version=${GIT_COMMIT} -Dpact.tag=${BRANCH_NAME} -Dpact.broker.url=http://broker_app:80"""
             }
         }
 
         stage ('Verify Pacts') {
           steps {
-            sh """cd producer ./mvnw clean verify -Dpact.provider.version=${GIT_COMMIT} -Dpact.verifier.publishResults=true"""
+            sh """cd producer && ./mvnw clean verify -Dpact.provider.version=${GIT_COMMIT} -Dpact.verifier.publishResults=true"""
           }
         }
     }
