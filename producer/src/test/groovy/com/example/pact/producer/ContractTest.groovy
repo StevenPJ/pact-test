@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when
 
 @RunWith(SpringRestPactRunner.class)
 @Provider("provider")
-@PactBroker(host = "localhost", port = "80")
+@PactBroker(host = "broker_app", port = "80")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ContractTest {
 

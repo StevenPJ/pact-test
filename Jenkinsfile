@@ -18,6 +18,14 @@ pipeline {
             sh """cd consumer &&  ./mvnw pact:publish -Dpact.consumer.version=${GIT_COMMIT} -Dpact.tag=${BRANCH_NAME} -Dpact.broker.url=http://broker_app:80"""
             }
         }
+
+        stage ('Build') {
+          steps {
+            sh 'cd producer ./mvnw clean verify
+              -Dpact.provider.version=${GIT_COMMIT}
+              -Dpact.verifier.publishResults=true'
+          }
+        }
     }
 
      post {
