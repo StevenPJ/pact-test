@@ -265,3 +265,6 @@ without useful output.
 Look at CI and webhooks with the pact broker and techniques to satisfy new scenarios to ensure
 * No down time
 * Fixes are not blocked from entering production
+
+Then automate the CI/webhooks creation
+Also look into creating a library to assist in creation of pacts when using openfeign/springMVC
