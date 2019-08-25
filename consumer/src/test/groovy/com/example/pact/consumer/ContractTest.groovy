@@ -14,18 +14,18 @@ import static io.pactfoundation.consumer.dsl.LambdaDsl.newJsonBody
 
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.NONE,
-        properties = 'user-service.base-url:http://localhost:${RANDOM_PORT}')
+        properties = 'user-service.base-url:http://localhost:8080')
 class ContractTest extends Specification {
 
-    public static RandomPortRule randomPort
-
-    def setupSpec() {
-        randomPort = new RandomPortRule()
-        randomPort.before()
-    }
+//    public static RandomPortRule randomPort
+//
+//    def setupSpec() {
+//        randomPort = new RandomPortRule()
+//        randomPort.before()
+//    }
 
     @Rule
-    PactProviderRuleMk2 provider = new PactProviderRuleMk2("provider", null, randomPort.getPort(), this)
+    PactProviderRuleMk2 provider = new PactProviderRuleMk2("provider", null, 8080, this)
 
     @Autowired
     ApiClient client
