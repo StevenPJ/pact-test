@@ -60,19 +60,12 @@
                 <groupId>au.com.dius</groupId>
                 <artifactId>pact-jvm-provider-maven_2.12</artifactId>
                 <version>3.6.12</version>
-                <executions>
-                    <execution>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>publish</goal>
-                        </goals>
-                    </execution>
-                </executions>
                 <configuration>
-                    <pactBrokerUrl>http://localhost:80</pactBrokerUrl>
+                    <pactBrokerUrl>${pact.broker.url}</pactBrokerUrl>
                     <trimSnapshot>true</trimSnapshot>
+                    <projectVersion>${pact.consumer.version}</projectVersion>
                     <tags>
-                        <tag>feature/feature_name</tag>
+                        <tag>${pact.tag}</tag>
                     </tags>
                 </configuration>
             </plugin>
