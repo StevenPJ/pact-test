@@ -25,6 +25,12 @@
             <version>3.6.12</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>au.com.dius</groupId>
+            <artifactId>pact-jvm-provider-spring_2.12</artifactId>
+            <version>3.6.12</version>
+        </dependency>
+
     </dependencies>
 
     <build>

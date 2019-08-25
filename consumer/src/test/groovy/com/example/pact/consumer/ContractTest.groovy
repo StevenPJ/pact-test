@@ -14,7 +14,7 @@ import static io.pactfoundation.consumer.dsl.LambdaDsl.newJsonBody
 
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.NONE,
-        properties = "mallory-service.base-url:http://localhost:8080")
+        properties = "user-service.base-url:http://localhost:8080")
 class ContractTest extends Specification {
 
     @Rule
@@ -24,29 +24,85 @@ class ContractTest extends Specification {
     ApiClient client;
 
     @Pact(consumer = "consumer")
-    RequestResponsePact malloryExists(PactDslWithProvider builder) {
+    RequestResponsePact getUser(PactDslWithProvider builder) {
         return builder
-            .given('there is some good mallory')
-                .uponReceiving('a retrieve Mallory request')
-                .path("/mallory")
+            .given('a user exists')
+                .uponReceiving('a retrieve User request')
+                .path("/user")
                 .method("GET")
             .willRespondWith()
                 .status(200)
                 .headers(['Content-Type': 'application/json'])
                 .body(newJsonBody({ o -> o
-                    .stringType('name', 'Mallory')
+                    .stringType('name', 'User')
                     .numberType('age', 2)
-                })
-            .build())
+                }).build())
             .toPact()
     }
 
-    @PactVerification(fragment = "malloryExists")
-    def "mallory exists"() {
+    @Pact(consumer = "consumer")
+    RequestResponsePact createUser(PactDslWithProvider builder) {
+        return builder
+            .given('a user can be created')
+                .uponReceiving('a create User request')
+                .path("/user")
+                .method("POST")
+                .body(newJsonBody({ o -> o
+                        .stringValue('name', 'User')
+                        .numberValue('age', 2)
+                }).build())
+            .willRespondWith()
+                .status(200)
+                .headers(['Content-Type': 'application/json'])
+                .body(newJsonBody({ o -> o
+                        .stringValue('name', 'User')
+                        .numberValue('age', 2)
+                }).build())
+            .toPact()
+    }
+
+    @Pact(consumer = "consumer")
+    RequestResponsePact queryUsers(PactDslWithProvider builder) {
+        return builder
+            .given('5 users exists')
+                .uponReceiving('a query Users request')
+                .path("/users")
+                .query("limit=5")
+                .method("GET")
+            .willRespondWith()
+                .status(200)
+                .headers(['Content-Type': 'application/json'])
+                .body(newJsonBody({ o -> o
+                        .object('query',  { q -> q.numberType('limit', 5) })
+                        .eachLike('users', { m -> m.stringType('name', 'User').numberType('age', 2) })
+                }).build())
+            .toPact()
+    }
+
+    @PactVerification(fragment = "getUser")
+    def "should fetch a user"() {
         given:
-        def mallory = client.getMallory()
+        def user = client.getUser()
         expect:
-        mallory.name == 'Mallory'
-        mallory.age == 2
+        user.name == 'User'
+        user.age == 2
+    }
+
+    @PactVerification(fragment = "createUser")
+    def "should create a user"() {
+        given:
+        def user = client.updateUser(new ApiClient.User("User", 2))
+        expect:
+        user.name == 'User'
+        user.age == 2
+    }
+
+    @PactVerification(fragment = "queryUsers")
+    def "should query users"() {
+        given:
+        def usersQuery = client.fetchUsers(5)
+        expect:
+        usersQuery.users.first().name == 'User'
+        usersQuery.users.first().age == 2
     }
 }
