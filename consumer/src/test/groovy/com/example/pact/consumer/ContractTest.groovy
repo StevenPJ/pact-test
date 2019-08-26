@@ -58,6 +58,7 @@ class ContractTest extends Specification {
                 .body(newJsonBody({ o -> o
                         .stringValue('name', 'User')
                         .numberValue('age', 2)
+                        .stringType('size', 'L')
                 }).build())
             .willRespondWith()
                 .status(200)
@@ -65,6 +66,7 @@ class ContractTest extends Specification {
                 .body(newJsonBody({ o -> o
                         .stringValue('name', 'User')
                         .numberValue('age', 2)
+                        .stringType('size', 'L')
                 }).build())
             .toPact()
     }
@@ -100,10 +102,11 @@ class ContractTest extends Specification {
     @PactVerification(fragment = "createUser")
     def "should create a user"() {
         given:
-        def user = client.updateUser(new ApiClient.User("User", 2))
+        def user = client.updateUser(new ApiClient.User("User", 2, 'L'))
         expect:
         user.name == 'User'
         user.age == 2
+        user.size == 'L'
     }
 
     @PactVerification(fragment = "queryUsers")
