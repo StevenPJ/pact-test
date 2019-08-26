@@ -43,6 +43,7 @@ class ContractTest extends Specification {
                 .body(newJsonBody({ o -> o
                     .stringType('name', 'User')
                     .numberType('age', 2)
+                    .stringType('size', 'L')
                 }).build())
             .toPact()
     }
@@ -93,6 +94,7 @@ class ContractTest extends Specification {
         expect:
         user.name == 'User'
         user.age == 2
+        user.size == 'L'
     }
 
     @PactVerification(fragment = "createUser")
