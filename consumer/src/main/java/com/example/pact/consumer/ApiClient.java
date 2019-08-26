@@ -25,8 +25,6 @@ public interface ApiClient {
     @Value
     class User {
         private String name;
-        private int age;
-        private String size;
     }
 
     @Value

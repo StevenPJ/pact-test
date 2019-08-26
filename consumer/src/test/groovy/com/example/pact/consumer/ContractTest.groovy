@@ -42,8 +42,6 @@ class ContractTest extends Specification {
                 .headers(['Content-Type': 'application/json'])
                 .body(newJsonBody({ o -> o
                     .stringType('name', 'User')
-                    .numberType('age', 2)
-                    .stringType('size', 'L')
                 }).build())
             .toPact()
     }
@@ -57,16 +55,12 @@ class ContractTest extends Specification {
                 .method("POST")
                 .body(newJsonBody({ o -> o
                         .stringValue('name', 'User')
-                        .numberValue('age', 2)
-                        .stringType('size', 'L')
                 }).build())
             .willRespondWith()
                 .status(200)
                 .headers(['Content-Type': 'application/json'])
                 .body(newJsonBody({ o -> o
                         .stringValue('name', 'User')
-                        .numberValue('age', 2)
-                        .stringType('size', 'L')
                 }).build())
             .toPact()
     }
@@ -84,7 +78,7 @@ class ContractTest extends Specification {
                 .headers(['Content-Type': 'application/json'])
                 .body(newJsonBody({ o -> o
                         .object('query',  { q -> q.numberType('limit', 5) })
-                        .eachLike('users', { m -> m.stringType('name', 'User').numberType('age', 2) })
+                        .eachLike('users', { m -> m.stringType('name', 'User') })
                 }).build())
             .toPact()
     }
@@ -95,18 +89,14 @@ class ContractTest extends Specification {
         def user = client.getUser()
         expect:
         user.name == 'User'
-        user.age == 2
-        user.size == 'L'
     }
 
     @PactVerification(fragment = "createUser")
     def "should create a user"() {
         given:
-        def user = client.updateUser(new ApiClient.User("User", 2, 'L'))
+        def user = client.updateUser(new ApiClient.User("User"))
         expect:
         user.name == 'User'
-        user.age == 2
-        user.size == 'L'
     }
 
     @PactVerification(fragment = "queryUsers")
@@ -115,6 +105,5 @@ class ContractTest extends Specification {
         def usersQuery = client.fetchUsers(5)
         expect:
         usersQuery.users.first().name == 'User'
-        usersQuery.users.first().age == 2
     }
 }
