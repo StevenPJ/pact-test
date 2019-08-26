@@ -27,7 +27,7 @@ pipeline {
 
         stage('Check Pact Verifications') {
           steps {
-            sh """./pact/bin/pact-broker can-i-deploy -a consumer -b http://broker_app:80 -e ${GIT_COMMIT}"""
+            sh """cd ~ && ./pact/bin/pact-broker can-i-deploy -a consumer -b http://broker_app:80 -e ${GIT_COMMIT}"""
           }
         }
     }
