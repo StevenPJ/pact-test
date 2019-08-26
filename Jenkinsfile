@@ -1,10 +1,14 @@
 pipeline {
     agent any
 
-     options {
+    options {
         // Keep 4 builds maximum
         buildDiscarder(logRotator(numToKeepStr: '4'))
-      }
+    }
+
+    parameters {
+      string(name: 'pactConsumerTags', defaultValue: 'master')
+    }
 
     stages {
         stage('Build Project') {
@@ -21,13 +25,13 @@ pipeline {
 
         stage ('Verify Pacts') {
           steps {
-            sh """cd producer && ./mvnw clean verify -Dpact.provider.version=${GIT_COMMIT} -Dpact.verifier.publishResults=true"""
+            sh """cd producer && ./mvnw clean verify -Dpact.provider.version=${GIT_COMMIT} -Dpact.verifier.publishResults=true -Dpactbroker.tags=${params.pactConsumerTags}"""
           }
         }
 
         stage('Check Pact Verifications') {
           steps {
-            sh """cd ~ && ./pact/bin/pact-broker can-i-deploy -a consumer -b http://broker_app:80 -e ${GIT_COMMIT}"""
+            sh """cd ~ && ./pact/bin/pact-broker can-i-deploy --retry-while-unknown=12 --retry-interval=10 -a consumer -b http://broker_app:80 -e ${GIT_COMMIT}"""
           }
         }
     }
